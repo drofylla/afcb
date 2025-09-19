@@ -35,7 +35,7 @@ func main() {
 		"Last Name":  "Swift",
 	})
 	if err != nil {
-		fmt.Errorf("Error:", err)
+		fmt.Println("Error:", err)
 	}
 
 	fmt.Println("\nUpdated Contacts List")

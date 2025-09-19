@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/sqids/sqids-go"
 )
@@ -73,4 +74,30 @@ func (contacts *Contacts) Delete(id string) error {
 		}
 	}
 	return errors.New("ID not found, unable to delete")
+}
+
+func (contacts *Contacts) UpdateContact(id string, updates map[string]string) error {
+	for i, c := range *contacts {
+		if c.ID == id {
+			for field, value := range updates {
+				key := strings.ToLower(strings.ReplaceAll(field, " ", ""))
+				switch key {
+				case "contacttype":
+					(*contacts)[i].ContactType = value
+				case "firstname":
+					(*contacts)[i].FirstName = value
+				case "lastname":
+					(*contacts)[i].LastName = value
+				case "email":
+					(*contacts)[i].Email = value
+				case "phone":
+					(*contacts)[i].Phone = value
+				default:
+					return fmt.Errorf("invalid field: %s ", field)
+				}
+			}
+			return nil
+		}
+	}
+	return errors.New("no ID found, unable to update contact info")
 }

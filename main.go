@@ -27,4 +27,20 @@ func main() {
 		fmt.Printf("ID: %s | Name: %s %s | Email: %s | Phone: %s\n", c.ID, c.FirstName, c.LastName, c.Email, c.Phone)
 	}
 
+	updateID := contacts[1].ID
+	fmt.Printf("\nUpdating Taylor's name...\n")
+
+	err := contacts.UpdateContact(updateID, map[string]string{
+		"First Name": "Taylor",
+		"Last Name":  "Swift",
+	})
+	if err != nil {
+		fmt.Errorf("Error:", err)
+	}
+
+	fmt.Println("\nUpdated Contacts List")
+	for _, c := range contacts {
+		fmt.Printf("ID: %s | Name: %s %s | Email: %s | Phone: %s\n", c.ID, c.FirstName, c.LastName, c.Email, c.Phone)
+	}
+
 }

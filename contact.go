@@ -60,3 +60,17 @@ func (contacts *Contacts) ValidateID(id string) error {
 	fmt.Println(err)
 	return err
 }
+
+func (contacts *Contacts) Delete(id string) error {
+	if err := contacts.ValidateID(id); err != nil {
+		return err
+	}
+
+	for i, c := range *contacts {
+		if c.ID == id {
+			*contacts = append((*contacts)[:i], (*contacts)[i+1:]...)
+			return nil
+		}
+	}
+	return errors.New("ID not found, unable to delete")
+}

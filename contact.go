@@ -4,11 +4,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/google/uuid"
+	"github.com/sqids/sqids-go"
 )
 
 type Contact struct {
-	ID          uuid.UUID
+	ID          string
 	ContactType string
 	FirstName   string
 	LastName    string
@@ -18,9 +18,29 @@ type Contact struct {
 
 type Contacts []Contact
 
+var sqid *sqids.Sqids
+var idCounter = 1
+
+func init() {
+	var err error
+	sqid, err = sqids.New(sqids.Options{
+		MinLength: 4,
+	})
+	if err != nil {
+		panic(err)
+	}
+}
+
+func newID() string {
+	nums := []uint64{uint64(idCounter)}
+	idCounter++
+	id, _ := sqid.Encode(nums)
+	return id
+}
+
 func (contacts *Contacts) New(contactType, firstName, lastName, email, phone string) {
 	contact := Contact{
-		ID:          uuid.New(),
+		ID:          newID(),
 		ContactType: contactType,
 		FirstName:   firstName,
 		LastName:    lastName,
@@ -30,7 +50,7 @@ func (contacts *Contacts) New(contactType, firstName, lastName, email, phone str
 	*contacts = append(*contacts, contact)
 }
 
-func (contacts *Contacts) ValidateUUID(id uuid.UUID) error {
+func (contacts *Contacts) ValidateID(id string) error {
 	for _, contact := range *contacts {
 		if contact.ID == id {
 			return nil

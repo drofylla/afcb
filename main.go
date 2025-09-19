@@ -2,27 +2,16 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/google/uuid"
 )
 
 func main() {
 	var contacts Contacts
 
-	contacts.New("Friend", "Alice", "Smith", "alice@example.com", "123-456")
-	contacts.New("Work", "Bob", "Jones", "bob@example.com", "987-654")
+	contacts.New("Friend", "Orm", "Korn", "ok@kshhh.com", "012-3456-789")
+	contacts.New("Family", "Zal", "Ahm", "za@zba.com", "133-0133-013")
 
-	// Test with existing UUID
-	existingID := contacts[0].ID
-	err := contacts.ValidateUUID(existingID)
-	if err == nil {
-		fmt.Println("✅ UUID found.")
-	}
-
-	// Test with random UUID
-	randomID := uuid.New()
-	err = contacts.ValidateUUID(randomID)
-	if err != nil {
-		fmt.Println("❌ UUID not found.")
+	fmt.Println("Contacts List")
+	for _, c := range contacts {
+		fmt.Printf("ID: %s | Name: %s %s | Email: %s | Phone: %s\n", c.ID, c.FirstName, c.LastName, c.Email, c.Phone)
 	}
 }

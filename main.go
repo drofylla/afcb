@@ -13,6 +13,7 @@ var contacts Contacts
 var cardTmpl = template.Must(template.New("card").Parse(`
 	<div class="card" id="contact-{{.ID}}">
 		<div class="details">
+			<span class="id">{{.ID}}</span><br>
 			<strong class="name">{{.FirstName}} {{.LastName}}</strong><br>
 			<span class="type">{{.ContactType}}</span><br>
 			<span class="details">{{.Email}} | {{.Phone}}</span>
@@ -28,7 +29,7 @@ var cardTmpl = template.Must(template.New("card").Parse(`
 			</button>
 			<button hx-delete="/contacts/{{.ID}}"
 					hx-target="#contact-{{.ID}}"
-					hx-swap="outerHTML"
+					hx-swap="delete"
 					title="Delete">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 					<polyline points="3 6 5 6 21 6"/>

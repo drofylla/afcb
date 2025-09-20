@@ -37,16 +37,20 @@ function closeModal() {
 // Reset form
 function resetForm() {
   form.reset();
-  document.getElementById("contactId").value = "";
+  document.getElementById("contactId").value = ""; // empty for new
+
+  form.setAttribute("hx-post", "/contacts");
+  form.removeAttribute("hx-put");
+  form.setAttribute("hx-target", "#contacts-list");
+  form.setAttribute("hx-swap", "afterbegin");
 }
 
-// Open modal in Edit mode
 function openEditModal(id, contactType, firstName, lastName, email, phone) {
   modal.style.display = "flex";
   document.getElementById("modalTitle").innerText = "Edit Contact";
 
-  document.getElementById("contactId").value = id;
-  document.getElementById("contactType").value = contactType; // ✅ dropdown value
+  document.getElementById("contactId").value = id; // ✅ keep ID hidden but sendable
+  document.getElementById("contactType").value = contactType;
   document.getElementById("firstName").value = firstName;
   document.getElementById("lastName").value = lastName;
   document.getElementById("email").value = email;

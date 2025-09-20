@@ -61,25 +61,21 @@ func addContact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	id := r.FormValue("ID")
 	contactType := r.FormValue("ContactType")
 	firstName := r.FormValue("FirstName")
 	lastName := r.FormValue("LastName")
 	email := r.FormValue("Email")
 	phone := r.FormValue("Phone")
 
-	contacts.New(contactType, firstName, lastName, email, phone)
+	contacts.SaveContact(id, contactType, firstName, lastName, email, phone)
 
-	// w.Header().Set("Content-Type", "text/html")
-	// for _, contact := range contacts {
-	// 	fmt.Fprintf(w, `
-	// 		<div class="card"
-	// 			<div><strong>%s %s</strong><div>
-	// 			<div>%s</div>
-	// 			<div>%s</div>
-	// 			<button hx-delete="/contacts/%s" hx-target="#contacts" hx-swap="outerHTML">Delete</button>
-	// 		</div>
-	// 		`, contact.FirstName, contact.LastName, contact.Email, contact.Phone, contact.ID)
-	// }
+	for _, c := range contacts {
+		if c.ID == id || id == "" {
+			renderCard(w, c)
+			return
+		}
+	}
 
 	renderCard(w, contacts[len(contacts)-1])
 }

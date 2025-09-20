@@ -101,3 +101,31 @@ func (contacts *Contacts) UpdateContact(id string, updates map[string]string) er
 	}
 	return errors.New("no ID found, unable to update contact info")
 }
+
+func (c *Contacts) SaveContact(id, contactType, firstName, lastName, email, phone string) {
+	if id == "" {
+		// New contact → generate ID
+		contact := Contact{
+			ID:          newID(),
+			ContactType: contactType,
+			FirstName:   firstName,
+			LastName:    lastName,
+			Email:       email,
+			Phone:       phone,
+		}
+		*c = append(*c, contact)
+		return
+	}
+
+	// Existing contact → update in place
+	for i := range *c {
+		if (*c)[i].ID == id {
+			(*c)[i].ContactType = contactType
+			(*c)[i].FirstName = firstName
+			(*c)[i].LastName = lastName
+			(*c)[i].Email = email
+			(*c)[i].Phone = phone
+			return
+		}
+	}
+}

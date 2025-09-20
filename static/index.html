@@ -5,26 +5,17 @@
         <title>AFCB</title>
         <link rel="stylesheet" href="style.css" />
         <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+        <script src="script.js" defer></script>
     </head>
     <body>
-        <!-- Add Contact -->
         <h1>Contact List</h1>
-        <form
-            hx-post="/contacts"
-            hx-target="#contacts-list"
-            hx-swap="afterbegin"
-        >
-            <input
-                name="ContactType"
-                placeholder="Type (Friend/Work)"
-                required
-            />
-            <input name="FirstName" placeholder="First Name" required />
-            <input name="LastName" placeholder="Last Name" required />
-            <input name="Email" placeholder="Email" required />
-            <input name="Phone" placeholder="Phone" required />
-            <button type="submit">Add Contact</button>
-        </form>
+
+        <!-- Add Contact Button -->
+        <div class="toolbar">
+            <button id="openModalBtn">Add Contact</button>
+        </div>
+
+        </div>
 
         <!-- Contact List -->
         <div
@@ -32,7 +23,32 @@
             hx-get="/contacts"
             hx-trigger="load"
             hx-swap="innerHTML"
-        >
+        ></div>
+
+        <!-- Modal Form -->
+        <div id="contactModal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeModalBtn">&times;</span>
+                <h2>Add Contact</h2>
+                <form
+                    id="contactForm"
+                    hx-post="/contacts"
+                    hx-target="#contacts-list"
+                    hx-swap="afterbegin"
+                    onsubmit="closeModal()"
+                >
+                    <input
+                        name="ContactType"
+                        placeholder="Type (Friend/Work)"
+                        required
+                    />
+                    <input name="FirstName" placeholder="First Name" required />
+                    <input name="LastName" placeholder="Last Name" required />
+                    <input name="Email" placeholder="Email" required />
+                    <input name="Phone" placeholder="Phone" required />
+                    <button type="submit">Save</button>
+                </form>
+            </div>
             <!--Card is here -->
         </div>
     </body>

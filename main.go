@@ -12,7 +12,7 @@ var contacts Contacts
 // card template
 var cardTmpl = template.Must(template.New("card").Parse(`
 	<div class="card" id="contact-{{.ID}}">
-		<div class="details>
+		<div class="details">
 		<strong>{{.FirstName}} {{.LastName}}</strong><br>
 		{{.ContactType}}<br>
 		{{.Email}} | {{.Phone}}

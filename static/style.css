@@ -1,182 +1,369 @@
-/* Import JetBrains Mono */
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap");
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-/* Global */
 body {
     font-family: "JetBrains Mono", monospace;
-    background: white;
-    margin: 0;
-    padding: 2rem;
-    color: black;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1600px; /* Increased to accommodate 5 cards */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
     text-align: center;
+    margin-bottom: 40px;
+    padding: 30px;
+    /*background: rgba(255, 255, 255, 0.9);*/
+    border-radius: 20px;
+    /*box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);*/
 }
 
-/* Title */
 h1 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
+    font-size: 4.5rem;
+    font-weight: 800;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    letter-spacing: -2px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.15);
+    line-height: 1.1;
 }
 
-/* Card Grid */
+header p {
+    color: #7f8c8d;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 2rem; /* space between cards */
-    justify-items: center;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
 }
 
-/* Contact Card */
 .card {
-    background: #c9c9c9;
-    border-radius: 1.5rem;
-    width: 220px;
-    height: 90px;
-    padding: 1rem;
-    text-align: center;
+    background: white;
+    border-radius: 15px;
+    padding: 18px; /* Slightly reduced padding */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: 180px; /* Reduced height to fit more content */
 }
 
-/* Name */
-.card .name {
-    font-weight: 700;
-    font-size: 1rem;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* ID */
-.card .id {
-    font-size: 0.8rem;
-    margin: 0.2rem 0;
-}
-
-/* Details */
-.card .details {
-    font-size: 0.85rem;
-    line-height: 1.3;
-}
-
-/* Actions */
-.card .actions {
+.add-card {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
     display: flex;
+    align-items: center;
     justify-content: center;
-    margin-top: 0.5rem;
-    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.card .actions button {
+.add-card:hover {
+    background: #e9ecef;
+    border-color: #3498db;
+    transform: translateY(-5px) scale(1.02);
+}
+
+.add-card-content {
+    text-align: center;
+    color: #6c757d;
+}
+
+.add-card-content svg {
+    width: 35px; /* Slightly smaller */
+    height: 35px;
+    margin-bottom: 8px;
+    stroke: #6c757d;
+}
+
+.add-card:hover .add-card-content {
+    color: #3498db;
+}
+
+.add-card:hover .add-card-content svg {
+    stroke: #3498db;
+}
+
+.add-card-text {
+    font-weight: 600;
+    font-size: 1rem; /* Slightly smaller */
+}
+
+.contact-card {
+    position: relative;
+}
+
+.contact-card .id {
+    font-size: 0.7rem; /* Smaller font */
+    color: #7f8c8d;
+    margin-bottom: 4px;
+}
+
+.contact-card .name {
+    font-weight: 700;
+    font-size: 1.1rem; /* Slightly smaller */
+    color: #2c3e50;
+    margin-bottom: 6px;
+}
+
+.contact-card .type {
+    display: inline-block;
+    background: #e8f4fc;
+    color: #3498db;
+    padding: 3px 8px; /* Smaller padding */
+    border-radius: 20px;
+    font-size: 0.75rem; /* Smaller font */
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.contact-card .details {
+    font-size: 0.85rem; /* Slightly smaller */
+    color: #34495e;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.contact-card .details div {
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.contact-card .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px; /* Smaller gap */
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
+.contact-card .actions button {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 0.7rem;
-    padding: 0.2 rem;
-    line-height: 1;
+    padding: 4px;
+    border-radius: 50%;
+    width: 32px; /* Smaller buttons */
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background 0.3s ease;
 }
 
-.card .actions button svg {
-    width: 20px;
-    height: 20px;
-    stroke: #333;
-    flex-shrink: 0;
-    transform: stroke 0.2s;
+.contact-card .actions button:hover {
+    background: #f5f5f5;
 }
 
-.card .actions button:hover svg {
-    stroke: #000;
+.contact-card .actions button svg {
+    width: 18px; /* Smaller icons */
+    height: 18px;
+    stroke: #7f8c8d;
+    transition: stroke 0.3s ease;
 }
 
-/* Add Contact Button */
-.add-contact-btn {
-    position: fixed;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 0.6rem 1.5rem;
-    background: #c9c9c9;
-    border: none;
-    border-radius: 2rem;
-    cursor: pointer;
-    font-weight: 600;
-    z-index: 100;
+.contact-card .actions button:hover svg {
+    stroke: #2c3e50;
 }
 
-.add-contact-btn:hover {
-    background: #b0b0b0;
-}
-
-/* Modal Background */
+/* Modal Styles */
 .modal {
-    display: none; /* hidden by default */
+    display: none;
     position: fixed;
-    z-index: 1000;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* dark overlay */
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
     justify-content: center;
     align-items: center;
 }
 
-/* Modal Content */
 .modal-content {
-    background: #fff;
-    width: 80%; /* 80% of screen */
-    max-width: 900px; /* don’t let it grow too big */
-    border-radius: 1rem;
-    padding: 2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     position: relative;
-    text-align: left;
+    animation: modalFadeIn 0.3s;
 }
 
-/* Close button */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .modal-content .close {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 1.5rem;
+    top: 20px;
+    right: 25px;
+    font-size: 28px;
     cursor: pointer;
+    color: #7f8c8d;
+    transition: color 0.3s ease;
 }
 
-/* Modal Form */
+.modal-content .close:hover {
+    color: #2c3e50;
+}
+
+.modal-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-align: center;
+}
+
 .modal-content form {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin-top: 1.5rem;
+    gap: 15px;
 }
 
-.modal-content form input {
-    padding: 0.6rem;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
+.modal-content form input,
+.modal-content form select {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     font-family: "JetBrains Mono", monospace;
+    font-size: 0.9rem;
+}
+
+.modal-content form input:focus,
+.modal-content form select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
 .modal-content form button {
-    grid-column: span 2;
-    padding: 0.8rem;
-    background: black;
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 600;
+    background: #3498db;
     color: white;
     border: none;
-    border-radius: 0.5rem;
-    font-weight: 600;
+    padding: 12px;
+    border-radius: 8px;
     cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+    transition: background 0.3s ease;
 }
 
 .modal-content form button:hover {
-    background: #333;
+    background: #2980b9;
 }
 
-.modal-content form select {
-    padding: 0.6rem;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
-    font-family: "JetBrains Mono", monospace;
-    background: #fff;
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1600px) {
+    .card-grid {
+        grid-template-columns: repeat(
+            4,
+            minmax(220px, 1fr)
+        ); /* 4 columns on smaller screens */
+    }
+}
+
+@media (max-width: 1280px) {
+    .card-grid {
+        grid-template-columns: repeat(3, minmax(220px, 1fr)); /* 3 columns */
+    }
+}
+
+@media (max-width: 1024px) {
+    .card-grid {
+        grid-template-columns: repeat(2, minmax(220px, 1fr)); /* 2 columns */
+    }
+
+    h1 {
+        font-size: 3.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .card-grid {
+        grid-template-columns: 1fr; /* 1 column on mobile */
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2.8rem;
+    }
+
+    header {
+        padding: 20px;
+    }
+
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    .card {
+        height: 160px; /* Even smaller on mobile */
+        padding: 15px;
+    }
+
+    .contact-card .details {
+        font-size: 0.8rem;
+    }
+
+    .contact-card .actions {
+        bottom: 10px;
+        right: 10px;
+    }
+}
+
+#contacts-list {
+    display: contents; /* lets its children flow directly into the grid */
 }

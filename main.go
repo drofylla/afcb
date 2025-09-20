@@ -65,12 +65,45 @@ func addContact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	id := r.FormValue("id")
 	contactType := r.FormValue("ContactType")
 	firstName := r.FormValue("FirstName")
 	lastName := r.FormValue("LastName")
 	email := r.FormValue("Email")
 	phone := r.FormValue("Phone")
 
+	// If ID is provided, it's an update, not a new contact
+	if id != "" {
+		updates := map[string]string{
+			"ContactType": contactType,
+			"FirstName":   firstName,
+			"LastName":    lastName,
+			"Email":       email,
+			"Phone":       phone,
+		}
+
+		if err := contacts.UpdateContact(id, updates); err != nil {
+			http.Error(w, err.Error(), http.StatusNotFound)
+			return
+		}
+
+		// Find and return the updated contact
+		for _, c := range contacts {
+			if c.ID == id {
+				if err := contacts.SaveToFile(dataFile); err != nil {
+					http.Error(w, "failed to save contacts: "+err.Error(), http.StatusInternalServerError)
+					return
+				}
+				renderCard(w, c)
+				return
+			}
+		}
+
+		http.Error(w, "contact not found after update", http.StatusNotFound)
+		return
+	}
+
+	// This is a new contact
 	contacts.New(contactType, firstName, lastName, email, phone)
 
 	// ✅ persist after adding

@@ -2,29 +2,47 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>AFCB</title>
-        <link rel="stylesheet" href="style.css" />
         <script src="https://unpkg.com/htmx.org@1.9.10"></script>
         <script src="script.js" defer></script>
+        <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-        <h1>AFCB</h1>
+        <div class="container">
+            <header>
+                <h1>AFCB</h1>
+            </header>
 
-        <!-- Add Contact Button -->
-        <div class="toolbar">
-            <button class="add-contact-btn" id="openModalBtn">Add Contact</button>
+            <div class="card-grid" id="contacts-container">
+                <!-- Add Contact Card -->
+                <div class="card add-card" id="openModalCard">
+                    <div class="add-card-content">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <div class="add-card-text">Add Contact</div>
+                    </div>
+                </div>
+
+                <!-- Contact List will be loaded here -->
+                <div
+                    id="contacts-list"
+                    hx-get="/contacts"
+                    hx-trigger="load"
+                    hx-swap="beforeend"
+                ></div>
+            </div>
         </div>
-
-        </div>
-
-        <!-- Contact List -->
-        <div
-            id="contacts-list"
-            class="card-grid"
-            hx-get="/contacts"
-            hx-trigger="load"
-            hx-swap="innerHTML"
-        ></div>
 
         <!-- Modal Form -->
         <div id="contactModal" class="modal">
@@ -46,14 +64,33 @@
                         <option value="Family">Family</option>
                         <option value="Work">Work</option>
                     </select>
-                    <input id="firstName" name="FirstName" placeholder="First Name" required />
-                    <input id="lastName" name="LastName" placeholder="Last Name" required />
-                    <input id="email" name="Email" placeholder="Email" required />
-                    <input id="phone" name="Phone" placeholder="Phone" required />
+                    <input
+                        id="firstName"
+                        name="FirstName"
+                        placeholder="First Name"
+                        required
+                    />
+                    <input
+                        id="lastName"
+                        name="LastName"
+                        placeholder="Last Name"
+                        required
+                    />
+                    <input
+                        id="email"
+                        name="Email"
+                        placeholder="Email"
+                        required
+                    />
+                    <input
+                        id="phone"
+                        name="Phone"
+                        placeholder="Phone"
+                        required
+                    />
                     <button type="submit">Save</button>
                 </form>
             </div>
-            <!--Card is here -->
         </div>
     </body>
 </html>

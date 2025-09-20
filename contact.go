@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/sqids/sqids-go"
@@ -63,17 +65,14 @@ func (contacts *Contacts) ValidateID(id string) error {
 }
 
 func (contacts *Contacts) Delete(id string) error {
-	if err := contacts.ValidateID(id); err != nil {
-		return err
-	}
-
 	for i, c := range *contacts {
 		if c.ID == id {
+			// Use slice tricks to remove the element
 			*contacts = append((*contacts)[:i], (*contacts)[i+1:]...)
 			return nil
 		}
 	}
-	return errors.New("ID not found, unable to delete")
+	return fmt.Errorf("contact id %s not found", id)
 }
 
 func (contacts *Contacts) UpdateContact(id string, updates map[string]string) error {
@@ -128,4 +127,45 @@ func (c *Contacts) SaveContact(id, contactType, firstName, lastName, email, phon
 			return
 		}
 	}
+}
+
+// Save contacts to JSON file
+func (c *Contacts) SaveToFile(filename string) error {
+	data, err := json.MarshalIndent(c, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(filename, data, 0644)
+}
+
+// Load contacts from JSON file
+func (c *Contacts) LoadFromFile(filename string) error {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		if os.IsNotExist(err) {
+			*c = Contacts{} // start fresh if no file
+			idCounter = 1
+			return nil
+		}
+		return err
+	}
+
+	if err := json.Unmarshal(data, c); err != nil {
+		return err
+	}
+
+	// ✅ Reset idCounter based on existing IDs
+	max := 0
+	for _, contact := range *c {
+		if contact.ID == "" {
+			continue
+		}
+		nums := sqid.Decode(contact.ID) // returns []uint64
+		if len(nums) > 0 && int(nums[0]) > max {
+			max = int(nums[0])
+		}
+	}
+	idCounter = max + 1
+	fmt.Println("restored idCounter to", idCounter)
+	return nil
 }

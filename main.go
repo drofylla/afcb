@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"text/template"
 
@@ -8,6 +10,8 @@ import (
 )
 
 var contacts Contacts
+
+const dataFile = "contacts.json"
 
 // card template
 var cardTmpl = template.Must(template.New("card").Parse(`
@@ -27,9 +31,10 @@ var cardTmpl = template.Must(template.New("card").Parse(`
 					<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
 				</svg>
 			</button>
-			<button hx-delete="/contacts/{{.ID}}"
+			<button class="delete-btn"
+					hx-delete="/contacts/{{.ID}}"
 					hx-target="#contact-{{.ID}}"
-					hx-swap="delete"
+					hx-swap="outerHTML"
 					title="Delete">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 					<polyline points="3 6 5 6 21 6"/>
@@ -55,84 +60,126 @@ func getContacts(w http.ResponseWriter, r *http.Request) {
 }
 
 func addContact(w http.ResponseWriter, r *http.Request) {
-	// var c Contact
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	id := r.FormValue("ID")
 	contactType := r.FormValue("ContactType")
 	firstName := r.FormValue("FirstName")
 	lastName := r.FormValue("LastName")
 	email := r.FormValue("Email")
 	phone := r.FormValue("Phone")
 
-	contacts.SaveContact(id, contactType, firstName, lastName, email, phone)
+	contacts.New(contactType, firstName, lastName, email, phone)
 
-	for _, c := range contacts {
-		if c.ID == id || id == "" {
-			renderCard(w, c)
-			return
-		}
-	}
-
-	renderCard(w, contacts[len(contacts)-1])
-}
-
-func deleteContact(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
-	if err := contacts.Delete(id); err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+	// ✅ persist after adding
+	if err := contacts.SaveToFile(dataFile); err != nil {
+		http.Error(w, "failed to save contacts: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusNoContent)
+
+	newContact := contacts[len(contacts)-1]
+	renderCard(w, newContact)
 }
 
 func updateContact(w http.ResponseWriter, r *http.Request) {
-	id := mux.Vars(r)["id"]
-	updates := map[string]string{}
-
-	if v := r.FormValue("FirstName"); v != "" {
-		updates["FirstName"] = v
-	}
-	if v := r.FormValue("LastName"); v != "" {
-		updates["LastName"] = v
-	}
-	if v := r.FormValue("Email"); v != "" {
-		updates["Email"] = v
-	}
-	if v := r.FormValue("Phone"); v != "" {
-		updates["Phone"] = v
-	}
-	if v := r.FormValue("ContactType"); v != "" {
-		updates["ContactType"] = v
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
+	vars := mux.Vars(r)
+	id := vars["id"]
+	fmt.Println("UPDATE request received for id:", id)
+
+	// Create updates map
+	updates := make(map[string]string)
+	updates["ContactType"] = r.FormValue("ContactType")
+	updates["FirstName"] = r.FormValue("FirstName")
+	updates["LastName"] = r.FormValue("LastName")
+	updates["Email"] = r.FormValue("Email")
+	updates["Phone"] = r.FormValue("Phone")
+
+	// Update the contact
 	if err := contacts.UpdateContact(id, updates); err != nil {
+		fmt.Println("update error:", err)
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 
+	// Save to file
+	if err := contacts.SaveToFile(dataFile); err != nil {
+		http.Error(w, "failed to save contacts: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Return updated card
 	for _, c := range contacts {
 		if c.ID == id {
 			renderCard(w, c)
 			return
 		}
 	}
+
+	http.Error(w, "contact not found", http.StatusNotFound)
+}
+
+func deleteContact(w http.ResponseWriter, r *http.Request) {
+	id := mux.Vars(r)["id"]
+	fmt.Println("DELETE request received for id:", id)
+
+	if err := contacts.Delete(id); err != nil {
+		fmt.Println("Delete error:", err)
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	if err := contacts.SaveToFile(dataFile); err != nil {
+		http.Error(w, "failed to save contacts: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Return empty content - HTMX will remove the element
+	w.WriteHeader(http.StatusOK)
+}
+
+// Debug: return contacts as JSON (IDs + names) so you can inspect what's stored
+func debugIDs(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	type simple struct {
+		ID        string `json:"id"`
+		FirstName string `json:"firstName"`
+		LastName  string `json:"lastName"`
+	}
+	out := make([]simple, 0, len(contacts))
+	for _, c := range contacts {
+		out = append(out, simple{ID: c.ID, FirstName: c.FirstName, LastName: c.LastName})
+	}
+	json.NewEncoder(w).Encode(out)
+}
+
+func seedContacts() {
+	contacts.New("Family", "Kornnaphat", "Sethratanapong", "ok@kshhh.com", "270-5200-227")
+	contacts.New("Friend", "Taylor", "Swift", "ts@tas.com", "131-2198-912")
 }
 
 func main() {
+	if err := contacts.LoadFromFile(dataFile); err != nil {
+		fmt.Println("Error loading contacts:", err)
+	}
 
 	router := mux.NewRouter()
 
 	router.HandleFunc("/contacts", getContacts).Methods("GET")
 	router.HandleFunc("/contacts", addContact).Methods("POST")
+	router.HandleFunc("/contacts/{id}", updateContact).Methods("POST") // Changed from PUT to POST
 	router.HandleFunc("/contacts/{id}", deleteContact).Methods("DELETE")
-	router.HandleFunc("/contacts/{id}", updateContact).Methods("PUT")
 
 	// Serve static frontend
 	fs := http.FileServer(http.Dir("./static"))
 	router.PathPrefix("/").Handler(fs)
+
+	fmt.Println("AFCB started at http://localhost:1330")
 	http.ListenAndServe(":1330", router)
 }

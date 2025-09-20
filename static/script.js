@@ -3,12 +3,21 @@ const openBtn = document.getElementById("openModalBtn");
 const closeBtn = document.getElementById("closeModalBtn");
 const form = document.getElementById("contactForm");
 
+// Add this to your script.js to handle HTMX errors
+document.body.addEventListener("htmx:responseError", function (evt) {
+  console.error(
+    "HTMX Error:",
+    evt.detail.xhr.status,
+    evt.detail.xhr.responseText,
+  );
+  alert("Error: " + evt.detail.xhr.responseText);
+});
+
 // Open Add Contact modal
 openBtn.onclick = () => {
   resetForm();
   document.getElementById("modalTitle").innerText = "Add Contact";
   form.setAttribute("hx-post", "/contacts"); // use POST for new
-  form.removeAttribute("hx-put");
   modal.style.display = "flex";
 };
 
@@ -26,7 +35,7 @@ window.onclick = (e) => {
   }
 };
 
-// Close after submit
+// Close after submit (keeps UX smooth)
 function closeModal() {
   setTimeout(() => {
     modal.style.display = "none";
@@ -34,30 +43,34 @@ function closeModal() {
   }, 300);
 }
 
-// Reset form
+// Reset form for "Add"
 function resetForm() {
   form.reset();
-  document.getElementById("contactId").value = ""; // empty for new
+  const idInput = document.getElementById("contactId");
+  if (idInput) idInput.value = ""; // empty for new
 
   form.setAttribute("hx-post", "/contacts");
-  form.removeAttribute("hx-put");
+  form.removeAttribute("hx-put"); // keep safe if you used hx-put earlier
   form.setAttribute("hx-target", "#contacts-list");
   form.setAttribute("hx-swap", "afterbegin");
 }
 
+// Open modal for editing — DO NOT remove hx-post
 function openEditModal(id, contactType, firstName, lastName, email, phone) {
   modal.style.display = "flex";
   document.getElementById("modalTitle").innerText = "Edit Contact";
 
-  document.getElementById("contactId").value = id; // ✅ keep ID hidden but sendable
+  const idInput = document.getElementById("contactId");
+  if (idInput) idInput.value = id;
+
   document.getElementById("contactType").value = contactType;
   document.getElementById("firstName").value = firstName;
   document.getElementById("lastName").value = lastName;
   document.getElementById("email").value = email;
   document.getElementById("phone").value = phone;
 
-  form.setAttribute("hx-put", `/contacts/${id}`);
-  form.removeAttribute("hx-post");
+  // IMPORTANT: point the form at the update endpoint (POST /contacts/:id)
+  form.setAttribute("hx-post", `/contacts/${id}`);
   form.setAttribute("hx-target", `#contact-${id}`);
   form.setAttribute("hx-swap", "outerHTML");
 }

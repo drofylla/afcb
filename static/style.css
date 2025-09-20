@@ -1,88 +1,91 @@
 /* Import JetBrains Mono */
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap");
 
-/* Global Reset */
+/* Global */
 body {
     font-family: "JetBrains Mono", monospace;
-    background: #fff;
+    background: white;
     margin: 0;
     padding: 2rem;
-    color: #333;
+    color: black;
     text-align: center;
 }
 
+/* Title */
 h1 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 600;
     margin-bottom: 2rem;
 }
 
 /* Card Grid */
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2rem; /* space between cards */
     justify-items: center;
-    margin-bottom: 3rem;
 }
 
 /* Contact Card */
-.contact-card {
-    background: #ccc;
+.card {
+    background: #c9c9c9;
     border-radius: 1.5rem;
-    padding: 1.5rem;
+    width: 220px;
+    height: 90px;
+    padding: 1rem;
     text-align: center;
-    width: 250px;
-    font-family: "JetBrains Mono", monospace;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-.contact-card h2 {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: 700;
-}
-.contact-card .id {
-    font-size: 0.9rem;
-    margin: 0.25rem 0;
-}
-.contact-card p {
-    margin: 0.25rem 0;
-}
-.contact-card .actions {
-    margin-top: 1rem;
     display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
-.contact-card .actions button {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-.contact-card .actions button:hover {
-    transform: scale(1.2);
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-/* Toolbar */
-.toolbar {
-    display: flex;
-    justify-content: center;
+/* Name */
+.card .name {
+    font-weight: 700;
+    font-size: 1rem;
 }
-.toolbar button {
+
+/* ID */
+.card .id {
+    font-size: 0.8rem;
+    margin: 0.2rem 0;
+}
+
+/* Details */
+.card .details {
+    font-size: 0.85rem;
+    line-height: 1.3;
+}
+
+/* Actions */
+.card .actions {
+    display: flex;
+    margin-top: 0.5rem;
+    gap: 1rem;
+}
+.card .actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin: 0 0.3rem;
+}
+
+.card .actions button:hover {
+    opacity: 0.7;
+}
+
+/* Add Contact Button */
+.add-contact-btn {
     padding: 0.6rem 1.5rem;
-    background: #ccc;
-    color: #000;
+    background: #c9c9c9;
     border: none;
     border-radius: 2rem;
     cursor: pointer;
-    transition: background 0.2s;
-    font-weight: bold;
-}
-.toolbar button:hover {
-    background: #aaa;
+    font-weight: 600;
 }
 
-/* Modal */
+/* Modal Background */
 .modal {
     display: none; /* hidden by default */
     position: fixed;
@@ -91,49 +94,66 @@ h1 {
     top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.6); /* dark overlay */
     justify-content: center;
     align-items: center;
 }
+
+/* Modal Content */
 .modal-content {
     background: #fff;
-    padding: 2rem;
+    width: 80%; /* 80% of screen */
+    max-width: 900px; /* don’t let it grow too big */
     border-radius: 1rem;
-    width: 80%;
-    max-width: 800px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     position: relative;
     text-align: left;
 }
-.modal-content h2 {
-    margin-top: 0;
-}
-.modal-content form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-.modal-content input {
-    padding: 0.6rem;
-    border-radius: 0.5rem;
-    border: 1px solid #ccc;
-}
-.modal-content button[type="submit"] {
-    background: black;
-    color: white;
-    padding: 0.6rem;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-}
-.modal-content button[type="submit"]:hover {
-    background: #333;
-}
 
-/* Close Button */
-.close {
+/* Close button */
+.modal-content .close {
     position: absolute;
     top: 1rem;
     right: 1rem;
     font-size: 1.5rem;
     cursor: pointer;
+}
+
+/* Modal Form */
+.modal-content form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.modal-content form input {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    font-family: "JetBrains Mono", monospace;
+}
+
+.modal-content form button {
+    grid-column: span 2;
+    padding: 0.8rem;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.modal-content form button:hover {
+    background: #333;
+}
+
+.modal-content form select {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    font-family: "JetBrains Mono", monospace;
+    background: #fff;
 }

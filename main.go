@@ -18,9 +18,11 @@ var cardTmpl = template.Must(template.New("card").Parse(`
 		{{.Email}} | {{.Phone}}
 		</div>
 		<div class="actions">
+			<button class="edit-btn"
+				onclick="openEditModal('{{.ID}}', '{{.ContactType}}', '{{.FirstName}}', '{{.LastName}}', '{{.Email}}', '{{.Phone}}')">✏️</button>
 			<button hx-delete="/contacts/{{.ID}}"
 					hx-target="#contact-{{.ID}}"
-					hx-swap="outerHTML">Delete</button>
+					hx-swap="outerHTML">🗑️</button>
 		</div>
 	</div>
 	`))

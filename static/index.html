@@ -8,7 +8,7 @@
         <script src="script.js" defer></script>
     </head>
     <body>
-        <h1>Contact List</h1>
+        <h1>AFCB</h1>
 
         <!-- Add Contact Button -->
         <div class="toolbar">
@@ -20,6 +20,7 @@
         <!-- Contact List -->
         <div
             id="contacts-list"
+            class="card-grid"
             hx-get="/contacts"
             hx-trigger="load"
             hx-swap="innerHTML"
@@ -29,7 +30,7 @@
         <div id="contactModal" class="modal">
             <div class="modal-content">
                 <span class="close" id="closeModalBtn">&times;</span>
-                <h2>Add Contact</h2>
+                <h2 id="modalTitle">Add Contact</h2>
                 <form
                     id="contactForm"
                     hx-post="/contacts"
@@ -37,11 +38,13 @@
                     hx-swap="afterbegin"
                     onsubmit="closeModal()"
                 >
-                    <input
-                        name="ContactType"
-                        placeholder="Type (Friend/Work)"
-                        required
-                    />
+                    <input type="hidden" name="ID" id="contactId" />
+                    <select name="ContactType" id="contactType" required>
+                        <option value="">-- Select Type --</option>
+                        <option value="Friend">Friend</option>
+                        <option value="Family">Family</option>
+                        <option value="Work">Work</option>
+                    </select>
                     <input name="FirstName" placeholder="First Name" required />
                     <input name="LastName" placeholder="Last Name" required />
                     <input name="Email" placeholder="Email" required />

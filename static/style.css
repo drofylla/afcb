@@ -60,29 +60,52 @@ h1 {
 /* Actions */
 .card .actions {
     display: flex;
+    justify-content: center;
     margin-top: 0.5rem;
     gap: 1rem;
 }
+
 .card .actions button {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1.2rem;
-    margin: 0 0.3rem;
+    font-size: 0.7rem;
+    padding: 0.2 rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.card .actions button:hover {
-    opacity: 0.7;
+.card .actions button svg {
+    width: 20px;
+    height: 20px;
+    stroke: #333;
+    flex-shrink: 0;
+    transform: stroke 0.2s;
+}
+
+.card .actions button:hover svg {
+    stroke: #000;
 }
 
 /* Add Contact Button */
 .add-contact-btn {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
     padding: 0.6rem 1.5rem;
     background: #c9c9c9;
     border: none;
     border-radius: 2rem;
     cursor: pointer;
     font-weight: 600;
+    z-index: 100;
+}
+
+.add-contact-btn:hover {
+    background: #b0b0b0;
 }
 
 /* Modal Background */

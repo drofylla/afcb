@@ -44,6 +44,7 @@ function resetForm() {
 function openEditModal(id, contactType, firstName, lastName, email, phone) {
   modal.style.display = "flex";
   document.getElementById("modalTitle").innerText = "Edit Contact";
+
   document.getElementById("contactId").value = id;
   document.getElementById("contactType").value = contactType; // ✅ dropdown value
   document.getElementById("firstName").value = firstName;

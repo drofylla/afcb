@@ -12,7 +12,7 @@
 
         <!-- Add Contact Button -->
         <div class="toolbar">
-            <button id="openModalBtn">Add Contact</button>
+            <button class="add-contact-btn" id="openModalBtn">Add Contact</button>
         </div>
 
         </div>
@@ -39,6 +39,7 @@
                     onsubmit="closeModal()"
                 >
                     <input type="hidden" name="ID" id="contactId" />
+
                     <select name="ContactType" id="contactType" required>
                         <option value="">-- Select Type --</option>
                         <option value="Friend">Friend</option>

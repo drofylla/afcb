@@ -4,12 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 	"text/template"
 
 	"github.com/gorilla/mux"
 )
 
 var contacts Contacts
+
+var emailRegex = regexp.MustCompile(`^[^@\s]+@[^@\s]+\.[^@\s]+$`)
 
 const dataFile = "contacts.json"
 
@@ -100,6 +103,11 @@ func addContact(w http.ResponseWriter, r *http.Request) {
 		}
 
 		http.Error(w, "contact not found after update", http.StatusNotFound)
+		return
+	}
+
+	if !emailRegex.MatchString(email) {
+		http.Error(w, "Invalid email address. Must contain @ and a valid domain.", http.StatusBadRequest)
 		return
 	}
 

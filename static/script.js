@@ -55,7 +55,7 @@ function resetForm() {
   form.setAttribute("hx-swap", "afterbegin");
 }
 
-// Open modal for editing — DO NOT remove hx-post
+// Open modal for editing
 function openEditModal(id, contactType, firstName, lastName, email, phone) {
   modal.style.display = "flex";
   document.getElementById("modalTitle").innerText = "Edit Contact";
@@ -69,8 +69,11 @@ function openEditModal(id, contactType, firstName, lastName, email, phone) {
   document.getElementById("email").value = email;
   document.getElementById("phone").value = phone;
 
-  // IMPORTANT: point the form at the update endpoint (POST /contacts/:id)
+  // CRITICAL FIX: Set the correct HTMX attributes for update
   form.setAttribute("hx-post", `/contacts/${id}`);
   form.setAttribute("hx-target", `#contact-${id}`);
   form.setAttribute("hx-swap", "outerHTML");
+
+  // Remove any hx-put attributes to avoid confusion
+  form.removeAttribute("hx-put");
 }

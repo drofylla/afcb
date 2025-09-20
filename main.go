@@ -91,38 +91,39 @@ func updateContact(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	id := vars["id"]
-	fmt.Println("UPDATE request received for id:", id)
+	fmt.Printf("UPDATE request received for id: %s, form values: %+v\n", id, r.Form)
 
-	// Create updates map
-	updates := make(map[string]string)
-	updates["ContactType"] = r.FormValue("ContactType")
-	updates["FirstName"] = r.FormValue("FirstName")
-	updates["LastName"] = r.FormValue("LastName")
-	updates["Email"] = r.FormValue("Email")
-	updates["Phone"] = r.FormValue("Phone")
+	updates := map[string]string{
+		"ContactType": r.FormValue("ContactType"),
+		"FirstName":   r.FormValue("FirstName"),
+		"LastName":    r.FormValue("LastName"),
+		"Email":       r.FormValue("Email"),
+		"Phone":       r.FormValue("Phone"),
+	}
 
-	// Update the contact
+	fmt.Printf("Attempting to update contact %s with: %+v\n", id, updates)
+
 	if err := contacts.UpdateContact(id, updates); err != nil {
-		fmt.Println("update error:", err)
+		fmt.Println("Update error:", err)
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
 
-	// Save to file
 	if err := contacts.SaveToFile(dataFile); err != nil {
 		http.Error(w, "failed to save contacts: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Return updated card
+	// Find and return the updated contact
 	for _, c := range contacts {
 		if c.ID == id {
+			fmt.Printf("Successfully updated contact: %+v\n", c)
 			renderCard(w, c)
 			return
 		}
 	}
 
-	http.Error(w, "contact not found", http.StatusNotFound)
+	http.Error(w, "contact not found after update", http.StatusNotFound)
 }
 
 func deleteContact(w http.ResponseWriter, r *http.Request) {
@@ -159,10 +160,12 @@ func debugIDs(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(out)
 }
 
-func seedContacts() {
-	contacts.New("Family", "Kornnaphat", "Sethratanapong", "ok@kshhh.com", "270-5200-227")
-	contacts.New("Friend", "Taylor", "Swift", "ts@tas.com", "131-2198-912")
+func debugContacts(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(contacts)
 }
+
+// In main(), add this route:
 
 func main() {
 	if err := contacts.LoadFromFile(dataFile); err != nil {
@@ -171,6 +174,7 @@ func main() {
 
 	router := mux.NewRouter()
 
+	router.HandleFunc("/debug/contacts", debugContacts).Methods("GET")
 	router.HandleFunc("/contacts", getContacts).Methods("GET")
 	router.HandleFunc("/contacts", addContact).Methods("POST")
 	router.HandleFunc("/contacts/{id}", updateContact).Methods("POST") // Changed from PUT to POST

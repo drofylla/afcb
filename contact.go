@@ -76,8 +76,12 @@ func (contacts *Contacts) Delete(id string) error {
 }
 
 func (contacts *Contacts) UpdateContact(id string, updates map[string]string) error {
+	fmt.Printf("Looking for contact with ID: %s\n", id)
+	fmt.Printf("Available contacts: %+v\n", *contacts)
+
 	for i, c := range *contacts {
 		if c.ID == id {
+			fmt.Printf("Found contact at index %d: %+v\n", i, c)
 			for field, value := range updates {
 				key := strings.ToLower(strings.ReplaceAll(field, " ", ""))
 				switch key {
@@ -92,9 +96,10 @@ func (contacts *Contacts) UpdateContact(id string, updates map[string]string) er
 				case "phone":
 					(*contacts)[i].Phone = value
 				default:
-					return fmt.Errorf("invalid field: %s ", field)
+					return fmt.Errorf("invalid field: %s", field)
 				}
 			}
+			fmt.Printf("Updated contact: %+v\n", (*contacts)[i])
 			return nil
 		}
 	}

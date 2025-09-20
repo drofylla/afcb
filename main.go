@@ -10,7 +10,7 @@ import (
 var contacts Contacts
 
 func getContacts(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application.json")
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(contacts)
 }
 
@@ -20,6 +20,11 @@ func addContact(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	contacts.New(c.ContactType, c.FirstName, c.LastName, c.Email, c.Phone)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(contacts[len(contacts)-1])
 }
 
 func deleteContact(w http.ResponseWriter, r *http.Request) {

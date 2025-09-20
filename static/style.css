@@ -1,0 +1,60 @@
+body {
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 2rem;
+}
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+.card {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.details {
+    flex-grow: 1;
+}
+.actions button {
+    margin-left: 0.5rem;
+    background: #eee;
+    border: none;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.actions button:hover {
+    background: #ddd;
+}
+form {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+}
+form input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+}
+form button {
+    grid-column: span 5;
+    padding: 0.5rem;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}

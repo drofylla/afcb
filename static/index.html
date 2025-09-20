@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>AFCB</title>
+        <link rel="stylesheet" href="style.css" />
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    </head>
+    <body>
+        <!-- Add Contact -->
+        <h1>Contact List</h1>
+        <form
+            hx-post="/contacts"
+            hx-target="#contacts-list"
+            hx-swap="afterbegin"
+        >
+            <input
+                name="ContactType"
+                placeholder="Type (Friend/Work)"
+                required
+            />
+            <input name="FirstName" placeholder="First Name" required />
+            <input name="LastName" placeholder="Last Name" required />
+            <input name="Email" placeholder="Email" required />
+            <input name="Phone" placeholder="Phone" required />
+            <button type="submit">Add Contact</button>
+        </form>
+
+        <!-- Contact List -->
+        <div
+            id="contacts-list"
+            hx-get="/contacts"
+            hx-trigger="load"
+            hx-swap="innerHTML"
+        >
+            <!--Card is here -->
+        </div>
+    </body>
+</html>
